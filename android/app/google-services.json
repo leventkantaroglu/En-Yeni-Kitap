@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "307594547229",
+    "firebase_url": "https://book-app-project-1f3bf.firebaseio.com",
+    "project_id": "book-app-project-1f3bf",
+    "storage_bucket": "book-app-project-1f3bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:307594547229:android:dfea69af81dad12b0ab6f4",
+        "android_client_info": {
+          "package_name": "com.lekadesignandapps.enyenikitap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "307594547229-g3rp5ffr6a9ohhnnl4fsj5tgm46g2d17.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPijD6fxPBqcJRgJ4yd_1DK5XCbsYfXM0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "307594547229-g3rp5ffr6a9ohhnnl4fsj5tgm46g2d17.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "307594547229-nl7bn9rgf6hes5mn36o6147p0n9dmv9g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lekadesignandapps.enyenikitap"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
