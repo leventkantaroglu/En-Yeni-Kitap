@@ -3,13 +3,17 @@ import 'package:enyenikitap/bookDetailsPage.dart';
 import 'package:enyenikitap/models/book.dart';
 
 class BookWidget extends StatelessWidget {
-  Book selectedBook;
+  final Book selectedBook;
   bool showCategoryLabel = false;
   bool showDateLabel = false;
+  final String source;
   BookWidget(this.selectedBook,
-      {@required this.showCategoryLabel, @required this.showDateLabel});
+      {@required this.showCategoryLabel,
+      @required this.showDateLabel,
+      @required this.source});
   @override
   Widget build(BuildContext context) {
+    // print(":: "+selectedBook.uid);
     return Card(
       margin: EdgeInsets.only(top: 3, bottom: 15, left: 3, right: 3),
       shape: RoundedRectangleBorder(
@@ -17,7 +21,7 @@ class BookWidget extends StatelessWidget {
       child: Container(
         //color: Colors.white,
         decoration: BoxDecoration(
-         /* ß */
+          /* ß */
           image: DecorationImage(
               fit: BoxFit.fill, image: new NetworkImage(selectedBook.cover)),
           boxShadow: [
@@ -74,7 +78,10 @@ class BookWidget extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BookDetailsPage(selectedBook),
+                builder: (context) => BookDetailsPage(
+                  selectedBook,
+                  source: this.source,
+                ),
               ),
             );
           },

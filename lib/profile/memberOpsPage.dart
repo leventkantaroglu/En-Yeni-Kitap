@@ -1,3 +1,4 @@
+/* import 'package:enyenikitap/profile/memberLoginPage.dart';
 import 'package:enyenikitap/profile/membershipFormButton.dart';
 import 'package:flutter/material.dart';
 import 'package:enyenikitap/profile/loginForm.dart';
@@ -19,7 +20,7 @@ class _MemberOpsPageState extends State<MemberOpsPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        MemberLoginForm(),
+        MemberLoginPage(),
         MemberRegisterFormButton(),
       ],
     ),
@@ -28,3 +29,4 @@ class _MemberOpsPageState extends State<MemberOpsPage> {
 
   
 }
+ */

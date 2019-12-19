@@ -8,43 +8,61 @@ class MemberRegisterForm extends StatefulWidget {
 }
 
 class _MemberRegisterFormState extends State<MemberRegisterForm> {
-  TextEditingController nameController =
-      TextEditingController(text: "kaiserofthenight@dr.com");
-  TextEditingController passwordController =
-      TextEditingController(text: "123654");
+  TextEditingController nameController = TextEditingController(text: "");
+  TextEditingController passwordController = TextEditingController(text: "");
+  TextEditingController passwordControllerRepeat =
+      TextEditingController(text: "");
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
     nameController.dispose();
     passwordController.dispose();
+    passwordControllerRepeat.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-        children: <Widget>[
-            Text(
-              "Kayıt Ekranı",
+      appBar: AppBar(
+        title: Text(
+              "Üye Kayıt Formu",
               textAlign: TextAlign.center,
             ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+           
             SizedBox(
               height: 50,
             ),
             TextFormField(
-              decoration: InputDecoration(border: OutlineInputBorder()),
+              decoration: InputDecoration(
+                hintText: "E-Posta",
+                border: OutlineInputBorder(),),
               controller: nameController,
             ),
             SizedBox(
               height: 20,
             ),
             TextFormField(
-              decoration: InputDecoration(border: OutlineInputBorder()),
+              decoration: InputDecoration(
+                hintText: "Şifre",
+                border: OutlineInputBorder(),),
               controller: passwordController,
+              obscureText: true,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: "Şifre (Tekrar)",
+                border: OutlineInputBorder(),
+              ),
+              controller: passwordControllerRepeat,
               obscureText: true,
             ),
             (Provider.of<MemberRepo>(context).registered == true)
@@ -52,8 +70,9 @@ class _MemberRegisterFormState extends State<MemberRegisterForm> {
                 : FlatButton(
                     child: Text("Kayıt"),
                     onPressed: () {
-                      Provider.of<MemberRepo>(context)
-                          .register(nameController.text, passwordController.text);
+                     // if(passwordController.text==passwordControllerRepeat.text)
+                      Provider.of<MemberRepo>(context).register(
+                          nameController.text, passwordController.text);
                       /*  Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -62,9 +81,9 @@ class _MemberRegisterFormState extends State<MemberRegisterForm> {
                     ); */
                     },
                   ),
-        ],
+          ],
+        ),
       ),
-          ),
     );
   }
 }

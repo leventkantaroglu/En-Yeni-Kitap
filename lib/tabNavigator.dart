@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:enyenikitap/homeTabPage.dart';
 import 'package:enyenikitap/publishersTabPage.dart';
 import 'package:enyenikitap/routePage.dart';
-import 'package:enyenikitap/searchTabPage.dart';
 import 'package:enyenikitap/memberPage.dart';
+
+import 'bookCategoriesTabPage.dart';
 
 class TabNavigatorRoutes {
   static const String root = '/';
@@ -32,9 +33,9 @@ class TabNavigator extends StatelessWidget {
         return {
           TabNavigatorRoutes.root: (context) => HomeTabPage(),
         };
-      case TabItem.search:
+      case TabItem.bookCategories:
         return {
-          TabNavigatorRoutes.root: (context) => SearchTabPage(),
+          TabNavigatorRoutes.root: (context) => BookCategoriesTabPage(),
         };
       case TabItem.publishers:
         return {

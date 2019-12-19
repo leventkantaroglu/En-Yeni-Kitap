@@ -16,7 +16,10 @@ class _HelpPageState extends State<HelpPage> {
         ),
         centerTitle: true,
       ),
-      body: Container(),
+      body: Center(
+        child: Text("Henüz içerik bulunmamaktadır"),
+      )
+
     );
   }
 }

@@ -15,7 +15,7 @@ class Publishers with ChangeNotifier {
   }
 
   getPublishersDataFromDataSource() async {
-    var snapshots = await _firestore.collection("publishers").getDocuments();
+    var snapshots = await _firestore.collection("publishers").orderBy("name").getDocuments();
     snapshots.documents.forEach((snapshot) {
       Publisher curPublisher =
           Publisher.fromDataSource(snapshot.data, snapshot.documentID);

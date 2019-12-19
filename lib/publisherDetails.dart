@@ -3,50 +3,47 @@ import 'package:enyenikitap/models/book.dart';
 import 'package:flutter/material.dart';
 import 'package:enyenikitap/bookWidget.dart';
 import 'package:enyenikitap/models/publisher.dart';
-import 'package:enyenikitap/tools/testValues.dart';
+import 'package:provider/provider.dart';
+
+import 'models/books.dart';
+import 'models/member.dart';
 
 class PublisherDetails extends StatefulWidget {
   final Publisher selectedPublisher;
-  PublisherDetails(this.selectedPublisher);
+  final String source;
+  PublisherDetails(this.selectedPublisher,{@required this.source});
   @override
   _PublisherDetailsState createState() => _PublisherDetailsState();
 }
 
 class _PublisherDetailsState extends State<PublisherDetails> {
   // variables
-  Firestore _firestore=Firestore.instance;
-  List<Book> curBooks=[];
-  // functions
-  void getBooksOfPublisher()async{
-    widget.selectedPublisher.bookUids.forEach((curUid)async{
-       var query = await _firestore.collection("books").document(curUid).get();
-      Book curBook =Book.fromDataSource(query.data);
-      setState(() {
-        curBooks.add(curBook);
-      }); 
-    });
-  }
+  
+  
+
   // init
   @override
   void initState() {
     super.initState();
-    getBooksOfPublisher();
+    //getBooksOfPublisher();
   }
-  // build 
+
+  // build
   @override
   Widget build(BuildContext context) {
+    final beingFollowed = Provider.of<MemberRepo>(context)
+        .beingFollowed(widget.selectedPublisher.uid, type: "publisher");
+    final logined = Provider.of<MemberRepo>(context).logined;
+    // -> books
+    final books = Provider.of<Books>(context);
+    books.getBooksByType("publisher", widget.selectedPublisher.uid);
     return Scaffold(
       appBar: AppBar(
         title: Text(
           widget.selectedPublisher.name,
         ),
         centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.notifications_none),
-            onPressed: () {},
-          ),
-        ],
+        actions: <Widget>[],
       ),
       body: Container(
           //padding: EdgeInsets.all(25),
@@ -59,8 +56,7 @@ class _PublisherDetailsState extends State<PublisherDetails> {
               children: <Widget>[
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400)
-                  ),
+                      border: Border.all(color: Colors.grey.shade400)),
                   child: Image.network(
                     widget.selectedPublisher.logo,
                     height: 100,
@@ -69,9 +65,22 @@ class _PublisherDetailsState extends State<PublisherDetails> {
                 Expanded(
                   child: Column(
                     children: <Widget>[
-                      Text("Yayınevi Adı"),
-                      Text("Yayınevi Logosu"),
-                      Text("Yayın evinin kitapları")
+                      (logined != LoginSituation.login)
+                          ? SizedBox()
+                          : FlatButton.icon(
+                              icon: Icon(Icons.notifications_none),
+                              label: Text(
+                                  beingFollowed ? "Takipten Çık" : "Takip et"),
+                              onPressed: () {
+                                (beingFollowed)
+                                    ? Provider.of<MemberRepo>(context).unfollow(
+                                        type: "publisher",
+                                        curUid: widget.selectedPublisher.uid)
+                                    : Provider.of<MemberRepo>(context).follow(
+                                        type: "publisher",
+                                        curUid: widget.selectedPublisher.uid);
+                              },
+                            ),
                     ],
                   ),
                 )
@@ -86,9 +95,14 @@ class _PublisherDetailsState extends State<PublisherDetails> {
               scrollDirection: Axis.horizontal,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   childAspectRatio: 1.5, crossAxisCount: 1),
-              itemCount: curBooks.length,
+              itemCount: books.publisherBooks.length,
               itemBuilder: (context, index) {
-               return BookWidget(curBooks[index],showCategoryLabel: true,showDateLabel: false,);
+                return BookWidget(
+                  books.publisherBooks[index],
+                  showCategoryLabel: true,
+                  showDateLabel: false,
+                  source: widget.source,
+                );
               },
             ),
           )

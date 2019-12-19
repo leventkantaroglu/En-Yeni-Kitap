@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 
 class DetailsPropertyCard extends StatelessWidget {
   int _index;
@@ -45,3 +45,4 @@ class DetailsPropertyCard extends StatelessWidget {
     return Icons.local_gas_station;
   }
 }
+ */

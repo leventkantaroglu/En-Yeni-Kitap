@@ -1,5 +1,5 @@
 import 'package:enyenikitap/memberPage.dart';
-import 'package:enyenikitap/profile/loginForm.dart';
+import 'package:enyenikitap/profile/memberLoginPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +18,7 @@ class _MemberTabPageState extends State<MemberTabPage> {
     switch (login) {
       case LoginSituation.idle:
       case LoginSituation.logout:
-        return MemberLoginForm();
+        return MemberLoginPage();
       case LoginSituation.progress:
         return Center(
           child: CircularProgressIndicator(),

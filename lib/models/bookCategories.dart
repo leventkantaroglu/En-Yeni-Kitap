@@ -15,7 +15,7 @@ class BookCategories with ChangeNotifier{
    getBookCategoriesDataFromDataSource() async {
     var snapshots = await _firestore.collection("bookCategories").orderBy("label").getDocuments();
     snapshots.documents.forEach((snapshot) {
-      BookCategory curBookCategory = BookCategory.fromDataSource(snapshot.data);
+      BookCategory curBookCategory = BookCategory.fromDataSource(snapshot.data,snapshot.documentID);
       this.list.add(curBookCategory);
     });
     notifyListeners();

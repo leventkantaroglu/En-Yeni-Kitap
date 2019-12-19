@@ -4,20 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:enyenikitap/profile/publisherManagementPage.dart';
 import 'package:provider/provider.dart';
 
-class MemberLoginForm extends StatefulWidget {
+class MemberLoginPage extends StatefulWidget {
   @override
-  _MemberLoginFormState createState() => _MemberLoginFormState();
+  _MemberLoginPageState createState() => _MemberLoginPageState();
 }
 
-class _MemberLoginFormState extends State<MemberLoginForm> {
+class _MemberLoginPageState extends State<MemberLoginPage> {
   var _formKey = GlobalKey<FormState>();
-  TextEditingController nameController =
-      TextEditingController(text: "kaiserofthenight@dr.com");
-  TextEditingController passwordController =
-      TextEditingController(text: "123654");
+  TextEditingController nameController = TextEditingController(text: "");
+  TextEditingController passwordController = TextEditingController(text: "");
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     nameController.dispose();
     passwordController.dispose();
@@ -27,32 +24,56 @@ class _MemberLoginFormState extends State<MemberLoginForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-          body: Container(
+      body: Container(
         padding: const EdgeInsets.all(8.0),
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(2, -1),
+                          color: Colors.grey,
+                          blurRadius: 5)
+                    ]),
+                child: Image.asset(
+                  "assets/splash.jpg",
+                  height: 200,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Text(
-                "Giriş Ekranı",
+                "Üye Giriş Ekranı",
                 textAlign: TextAlign.center,
               ),
               SizedBox(
-                height: 50,
+                height: 10,
               ),
               TextFormField(
-                decoration: InputDecoration(border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                  hintText: "E-Posta Adresi",
+                  border: OutlineInputBorder(),
+                ),
                 controller: nameController,
               ),
               SizedBox(
                 height: 20,
               ),
               TextFormField(
-                decoration: InputDecoration(border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                  hintText: "Şifre",
+                  border: OutlineInputBorder(),
+                ),
                 controller: passwordController,
                 obscureText: true,
               ),
+              
               FlatButton(
                 child: Text("Giriş"),
                 onPressed: () {

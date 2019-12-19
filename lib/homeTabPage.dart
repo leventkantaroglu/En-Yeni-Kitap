@@ -1,12 +1,10 @@
-import 'package:enyenikitap/configuration.dart';
+import 'package:enyenikitap/models/book.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:enyenikitap/bookWidget.dart';
 import 'package:enyenikitap/publisherStoryThumbWidget.dart';
 import 'package:enyenikitap/tools/strings.dart';
-import 'package:enyenikitap/tools/testValues.dart';
 import 'package:provider/provider.dart';
-
 import 'models/books.dart';
 import 'models/publishers.dart';
 
@@ -44,6 +42,8 @@ class _HomeTabPageState extends State<HomeTabPage> {
   @override
   void initState() {
     super.initState();
+    //getHomeBooks();
+    //fcm
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
@@ -111,16 +111,25 @@ class _HomeTabPageState extends State<HomeTabPage> {
         const IosNotificationSettings(sound: true, badge: true, alert: true));
   }
 
+// variables
+  /* Firestore _firestore = Firestore.instance;
+  List<Book> books = []; */
+  // functions
+
   @override
   Widget build(BuildContext context) {
-    final books = Provider.of<Books>(context).list;
+    // home -> books
+    final books = Provider.of<Books>(context);
+    books.getHomeBooks(20);
+    // home -> publishers
     final publishers = Provider.of<Publishers>(context).list;
 
     return Scaffold(
       body: Container(
         child: Column(
           children: <Widget>[
-            homePageSection(title: "Yeni Çıkan Kitaplar", books: books),
+            homePageSection(
+                title: "Yeni Çıkan Kitaplar", books: books.homePageBooks),
             Container(
               height: 95,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -141,7 +150,8 @@ class _HomeTabPageState extends State<HomeTabPage> {
     );
   }
 
-  Widget homePageSection({title, books}) {
+  Widget homePageSection({title, List<Book> books}) {
+    
     String sectionTitle = title ?? appName;
     return Expanded(
       flex: 1,
@@ -177,11 +187,11 @@ class _HomeTabPageState extends State<HomeTabPage> {
                     crossAxisCount: 1, childAspectRatio: 1.5),
                 itemCount: books.length,
                 itemBuilder: (context, index) {
-                  //print(vehicleList[index].title+" -- "+vehicleList[index].noImage.toString());
                   return BookWidget(
                     books[index],
                     showCategoryLabel: true,
                     showDateLabel: true,
+                    source: "home",
                   );
                 },
               ),

@@ -55,11 +55,11 @@ class _PublishersTabPageState extends State<PublishersTabPage> {
       body: ListView.builder(
         itemCount: publishers.length,
         itemBuilder: (context, index) {
-          bool hasAlert = false;
+          /* bool hasAlert = false;
           followingPublisherUids.forEach((String curPublisherUid) {
-            if (curPublisherUid == publishers[index].uid) hasAlert = true;
-          });
-          return PublisherListItem(publishers[index], hasAlert);
+           // if (curPublisherUid == publishers[index].uid) hasAlert = true;
+          }); */
+          return PublisherListItem(publishers[index]);
         },
       ),
     );

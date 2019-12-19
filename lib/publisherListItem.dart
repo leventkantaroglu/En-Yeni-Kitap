@@ -1,13 +1,19 @@
+import 'package:enyenikitap/models/member.dart';
 import 'package:flutter/material.dart';
 import 'package:enyenikitap/models/publisher.dart';
 import 'package:enyenikitap/publisherDetails.dart';
+import 'package:provider/provider.dart';
 
 class PublisherListItem extends StatelessWidget {
   final Publisher selectedPublisher;
-  bool hasAlert;
-  PublisherListItem(this.selectedPublisher,this.hasAlert);
+  
+  PublisherListItem(this.selectedPublisher);
   @override
   Widget build(BuildContext context) {
+     final beingFollowed = Provider.of<MemberRepo>(context)
+        .beingFollowed(selectedPublisher.uid, type: "publisher");
+    
+    final logined = Provider.of<MemberRepo>(context).logined;
     return Card(
       child: ListTile(
         leading: Container(
@@ -24,17 +30,21 @@ class PublisherListItem extends StatelessWidget {
           //child:Image.asset(selectedPublisher.logo),
         ),
         title: Text(selectedPublisher.name),
-       // subtitle: Text("Yeni Kitap: 14"),
-        trailing: Icon(
-         hasAlert==true ? Icons.notifications:Icons.notifications_none,
-          
-          color: hasAlert==true ?Colors.orange:Colors.grey.withOpacity(0.5)
-        ),
+        // subtitle: Text("Yeni Kitap: 14"),
+        trailing: (logined != LoginSituation.login)
+            ? null
+            : Icon(
+                beingFollowed == true
+                    ? Icons.notifications
+                    : Icons.notifications_none,
+                color: beingFollowed == true
+                    ? Colors.orange
+                    : Colors.grey.withOpacity(0.5)),
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => PublisherDetails(selectedPublisher)),
+                builder: (context) => PublisherDetails(selectedPublisher,source: "publisher",)),
           );
         },
       ),

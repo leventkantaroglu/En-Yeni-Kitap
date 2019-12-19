@@ -27,7 +27,6 @@ class _MemberPageState extends State<MemberPage> {
   @override
   Widget build(BuildContext context) {
     final favoriteBooks = Provider.of<MemberRepo>(context).favoriteBooks;
-    
 
     return Scaffold(
       appBar: AppBar(
@@ -51,13 +50,28 @@ class _MemberPageState extends State<MemberPage> {
           IconButton(
             icon: Icon(Icons.info_outline),
             onPressed: () {
-              showAboutDialog(context: context);
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return SimpleDialog(
+                      title: Text(
+                        "Yeni Bir Kitap",
+                        textAlign: TextAlign.center,
+                      ),
+                      children: <Widget>[
+                        Text(
+                          "LEKA Design & Apps",
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    );
+                  });
             },
           ),
-           IconButton(
+          IconButton(
             icon: Icon(Icons.exit_to_app),
             onPressed: () {
-             Provider.of<MemberRepo>(context).logout();
+              Provider.of<MemberRepo>(context).logout();
             },
           ),
         ],
@@ -99,17 +113,22 @@ class _MemberPageState extends State<MemberPage> {
                                 ? Center(
                                     child: CircularProgressIndicator(),
                                   )
-                                : GridView.builder(
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 1,
-                                            childAspectRatio: 1.5),
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: favoriteBooks.length,
-                                    itemBuilder: (context, index) {
-                                      return BookGridTile(favoriteBooks[index]);
-                                    },
-                                  ),
+                                : (favoriteBooks.length == 0)
+                                    ? Center(
+                                        child: Text("Hiç kitap bulunamadı"),
+                                      )
+                                    : GridView.builder(
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 1,
+                                                childAspectRatio: 1.5),
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: favoriteBooks.length,
+                                        itemBuilder: (context, index) {
+                                          return BookGridTile(
+                                              favoriteBooks[index],source: "member",);
+                                        },
+                                      ),
                           ),
                         ),
                       ],
@@ -127,14 +146,14 @@ class _MemberPageState extends State<MemberPage> {
                         Row(
                           children: <Widget>[
                             Icon(
-                              Icons.notifications_none,
+                              Icons.settings,
                               color: Colors.indigo,
                             ),
                             SizedBox(
                               width: 10,
                             ),
                             Text(
-                              "Takip Ettiklerim",
+                              "Ayarlar",
                               style: TextStyle(fontSize: 20),
                             ),
                           ],
@@ -147,12 +166,15 @@ class _MemberPageState extends State<MemberPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text("Bildirimler"),
-                                  /*  ToggleButtons(
+                              (Provider.of<MemberRepo>(context).notifications ==
+                                      null)
+                                  ? SizedBox()
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text("Bildirimler"),
+                                        /*  ToggleButtons(
                                     isSelected: [true, false],
                                     children: <Widget>[
                                       Text("Açık"),
@@ -160,16 +182,26 @@ class _MemberPageState extends State<MemberPage> {
                                     ],
                                     onPressed: (_) {},
                                   ), */
-                                  Switch(
-                                    value: true,
-                                    onChanged: (selectedValue) {},
-                                  )
-                                ],
-                              ),
+                                        Switch(
+                                          value:
+                                              Provider.of<MemberRepo>(context)
+                                                  .notifications,
+                                          onChanged: (selectedValue) {
+                                            (selectedValue == true)
+                                                ? Provider.of<MemberRepo>(
+                                                        context)
+                                                    .enableNotifications()
+                                                : Provider.of<MemberRepo>(
+                                                        context)
+                                                    .disableNotifications();
+                                          },
+                                        )
+                                      ],
+                                    ),
                               SizedBox(
                                 height: 10,
                               ),
-                              Row(
+                              /*  Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Expanded(
@@ -207,6 +239,7 @@ class _MemberPageState extends State<MemberPage> {
                                   ),
                                 ],
                               ),
+                             */
                             ],
                           ),
                         ),
@@ -232,10 +265,12 @@ class _MemberPageState extends State<MemberPage> {
               ButtonBar(
                 children: <Widget>[
                   FlatButton(
-                    child: Text("Geri"),onPressed: (){},
+                    child: Text("Geri"),
+                    onPressed: () {},
                   ),
                   FlatButton(
-                    child: Text("Onay"),onPressed: (){},
+                    child: Text("Onay"),
+                    onPressed: () {},
                   ),
                 ],
               )

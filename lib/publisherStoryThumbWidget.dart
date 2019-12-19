@@ -40,7 +40,7 @@ class PublisherStorythumWidget extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => PublisherDetails(selectedPublisher),
+          builder: (context) => PublisherDetails(selectedPublisher,source:"home" ),
         ),
       ),
     );

@@ -4,11 +4,10 @@ import 'package:enyenikitap/models/publisher.dart';
 import 'package:flutter/material.dart';
 import 'package:enyenikitap/homeTabPage.dart';
 import 'package:enyenikitap/publishersTabPage.dart';
-import 'package:enyenikitap/searchTabPage.dart';
 import 'package:enyenikitap/tabNavigator.dart';
 import 'customBottomNavigationBar.dart';
 
-enum TabItem { home, search, publishers, member }
+enum TabItem { home, bookCategories, publishers, member }
 
 class RoutePage extends StatefulWidget {
   @override
@@ -21,7 +20,7 @@ class _RoutePageState extends State<RoutePage> {
 
   Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys = {
     TabItem.home: GlobalKey<NavigatorState>(),
-    TabItem.search: GlobalKey<NavigatorState>(),
+    TabItem.bookCategories: GlobalKey<NavigatorState>(),
     TabItem.publishers: GlobalKey<NavigatorState>(),
     TabItem.member: GlobalKey<NavigatorState>(),
   };
@@ -32,16 +31,13 @@ class _RoutePageState extends State<RoutePage> {
   }
 
   var firestore = Firestore.instance;
-  
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 //    getMemberDataFromDataSource("MoY6FS1eqr36vVJDRNZC");
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +51,7 @@ class _RoutePageState extends State<RoutePage> {
             child: Stack(
               children: <Widget>[
                 _buildOffstageNavigator(TabItem.home),
-                _buildOffstageNavigator(TabItem.search),
+                _buildOffstageNavigator(TabItem.bookCategories),
                 _buildOffstageNavigator(TabItem.publishers),
                 _buildOffstageNavigator(TabItem.member),
               ],
