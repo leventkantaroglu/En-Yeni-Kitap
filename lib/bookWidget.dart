@@ -1,19 +1,36 @@
+import 'package:enyenikitap/models/bookCategory.dart';
 import 'package:flutter/material.dart';
 import 'package:enyenikitap/bookDetailsPage.dart';
 import 'package:enyenikitap/models/book.dart';
+import 'package:provider/provider.dart';
+
+import 'models/bookCategories.dart';
 
 class BookWidget extends StatelessWidget {
   final Book selectedBook;
-  bool showCategoryLabel = false;
-  bool showDateLabel = false;
+  final bool showCategoryLabel;
+  final bool showDateLabel;
   final String source;
   BookWidget(this.selectedBook,
       {@required this.showCategoryLabel,
       @required this.showDateLabel,
       @required this.source});
+
+  // functions
+  getBookCategoryDetails(context) {
+    selectedBook.bookCategory = Provider.of<BookCategories>(context)
+        .getBookCategoryFromUid(selectedBook.bookCategoryUid);
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
-    // print(":: "+selectedBook.uid);
+    //print("- "+widget.selectedBook.bookCategoryUid);
+    getBookCategoryDetails(context);
+
+    //print("c " + widget.selectedBook.bookCategory.label.toString());
+
     return Card(
       margin: EdgeInsets.only(top: 3, bottom: 15, left: 3, right: 3),
       shape: RoundedRectangleBorder(
@@ -39,7 +56,7 @@ class BookWidget extends StatelessWidget {
           child: Stack(
             children: <Widget>[
               Visibility(
-                visible: showDateLabel,
+                visible: this.showDateLabel,
                 child: Align(
                   alignment: Alignment(1, 0.95),
                   child: Card(
@@ -47,7 +64,7 @@ class BookWidget extends StatelessWidget {
                       padding: EdgeInsets.all(5),
                       color: Colors.orange.shade700,
                       child: Text(
-                        "07 Aralık",
+                        this.selectedBook.publishDateText,
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.w700),
                       ),
@@ -56,7 +73,7 @@ class BookWidget extends StatelessWidget {
                 ),
               ),
               Visibility(
-                visible: showCategoryLabel,
+                visible: this.showCategoryLabel,
                 child: Align(
                   alignment: Alignment(-0.95, -1),
                   child: Card(
@@ -64,7 +81,7 @@ class BookWidget extends StatelessWidget {
                       padding: EdgeInsets.all(5),
                       color: Colors.orange.shade700,
                       child: Text(
-                        "Polisiye",
+                        this.selectedBook.bookCategory.label,
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.w700),
                       ),
@@ -79,7 +96,7 @@ class BookWidget extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => BookDetailsPage(
-                  selectedBook,
+                  this.selectedBook,
                   source: this.source,
                 ),
               ),

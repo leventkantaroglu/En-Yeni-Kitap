@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enyenikitap/models/book.dart';
+import 'package:enyenikitap/models/bookCategories.dart';
 import 'package:enyenikitap/models/bookCategory.dart';
 import 'package:enyenikitap/models/publisher.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +11,10 @@ class Books with ChangeNotifier {
   List<Book> homePageBooks = [];
   List<Book> publisherBooks = [];
   List<Book> bookCategoryBooks = [];
-  Book currentHomeTabBook=Book.withEmptyValues();
-  Book currentPublisherTabBook=Book.withEmptyValues();
-  Book currentBookCategoryTabBook=Book.withEmptyValues();
-  Book currentMemberTabBook=Book.withEmptyValues();
+  Book currentHomeTabBook = Book.withEmptyValues();
+  Book currentPublisherTabBook = Book.withEmptyValues();
+  Book currentBookCategoryTabBook = Book.withEmptyValues();
+  Book currentMemberTabBook = Book.withEmptyValues();
 
   Books() {
     //this.list=list;
@@ -45,43 +46,68 @@ class Books with ChangeNotifier {
     });
   } */
 
-  getBookCategoryDetails(bookUid, bookCategoryUid) async {
-    _firestore = Firestore.instance;
-    var query = await _firestore
-        .collection("bookCategories")
-        .document(bookCategoryUid)
-        .get();
-
-    bookCategoryBooks.forEach((listItem) {
-      if (listItem.uid == bookUid) {
-        if (query.data != null) {
-          listItem.bookCategory =
+  getBookCategoryDetails({uid, source}) async {
+    var query = await _firestore.collection("bookCategories").document(uid).get();
+    if (query.data != null) {
+      switch (source) {
+        case "home":
+          currentHomeTabBook.bookCategory =
               BookCategory.fromDataSource(query.data, query.documentID);
-        } else {
-          //print("-->O" + query.data.toString());
-          listItem.bookCategory = BookCategory.withDefaultValues();
-        }
-        notifyListeners();
+          break;
+        case "bookCategory":
+          currentBookCategoryTabBook.bookCategory =
+              BookCategory.fromDataSource(query.data, query.documentID);
+          break;
+        case "publisher":
+          currentPublisherTabBook.bookCategory =
+              BookCategory.fromDataSource(query.data, query.documentID);
+          break;
+        case "member":
+          currentMemberTabBook.bookCategory =
+              BookCategory.fromDataSource(query.data, query.documentID);
+          break;
+        default:
       }
-    });
+    } else {
+      switch (source) {
+        case "home":
+          currentHomeTabBook.bookCategory = BookCategory.withDefaultValues();
+          break;
+        case "bookCategory":
+          currentBookCategoryTabBook.bookCategory = BookCategory.withDefaultValues();
+          break;
+        case "publisher":
+          currentPublisherTabBook.bookCategory = BookCategory.withDefaultValues();
+          break;
+        case "member":
+          currentMemberTabBook.bookCategory = BookCategory.withDefaultValues();
+          break;
+        default:
+      }
+    }
+    notifyListeners();
   }
 
-  void getHomeBooks(limit) async {
+  static Future getHomeBooks(limit) async {
+    var _firestore = Firestore.instance;
+    List<Book> curBooks = [];
     var snapshots = await _firestore
         .collection("books")
+        .orderBy("publishDate", descending: true)
         //.limit(limit) //!!! limit 20 for homepage
         .getDocuments();
     if (snapshots != null) {
-      homePageBooks.clear();
       snapshots.documents.forEach((snapshot) {
         Book curBook = Book.fromDataSource(snapshot.data, snapshot.documentID);
-        homePageBooks.add(curBook);
+        curBooks.add(curBook);
       });
-      notifyListeners();
     }
+    return curBooks;
   }
 
-  void getBooksByType(type, uid) async {
+  static Future getBooksByType(type, uid) async {
+    var _firestore = Firestore.instance;
+    List<Book> curBooks = [];
     String criteriaField;
     switch (type) {
       case "bookCategory":
@@ -104,29 +130,32 @@ class Books with ChangeNotifier {
       switch (type) {
         case "bookCategory":
           //criteriaField = "bookCategory";
-          bookCategoryBooks.clear();
+          //bookCategoryBooks.clear();
           break;
         case "publisher":
           //criteriaField = "publisher";
-          publisherBooks.clear();
+          //publisherBooks.clear();
           break;
         default:
       }
       //notifyListeners();
       snapshots.documents.forEach((snapshot) {
         Book curBook = Book.fromDataSource(snapshot.data, snapshot.documentID);
-        switch (type) {
+        curBooks.add(curBook);
+        /* switch (type) {
           case "bookCategory":
-            bookCategoryBooks.add(curBook);
+            //bookCategoryBooks.add(curBook);
             break;
           case "publisher":
-            publisherBooks.add(curBook);
+            //publisherBooks.add(curBook);
             break;
           default:
-        }
+        } */
       });
-      notifyListeners();
+
+      //notifyListeners();
     }
+    return curBooks;
   }
 
   getPublisherDetails({@required uid, @required source}) async {
@@ -156,20 +185,16 @@ class Books with ChangeNotifier {
     } else {
       switch (source) {
         case "home":
-          currentHomeTabBook.publisher =
-              Publisher.withDefaultValues();
+          currentHomeTabBook.publisher = Publisher.withDefaultValues();
           break;
         case "bookCategory":
-          currentBookCategoryTabBook.publisher =
-              Publisher.withDefaultValues();
+          currentBookCategoryTabBook.publisher = Publisher.withDefaultValues();
           break;
         case "publisher":
-          currentPublisherTabBook.publisher =
-              Publisher.withDefaultValues();
+          currentPublisherTabBook.publisher = Publisher.withDefaultValues();
           break;
         case "member":
-          currentMemberTabBook.publisher =
-              Publisher.withDefaultValues();
+          currentMemberTabBook.publisher = Publisher.withDefaultValues();
           break;
         default:
       }

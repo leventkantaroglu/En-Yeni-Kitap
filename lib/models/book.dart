@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enyenikitap/models/bookCategories.dart';
 import 'package:enyenikitap/models/bookCategory.dart';
 import 'package:enyenikitap/models/publisher.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ class Book with ChangeNotifier {
   String name;
   String cover;
   String author;
+  DateTime publishDate;
   String publisherUid;
   Publisher publisher;
   String bookCategoryUid;
@@ -20,6 +22,9 @@ class Book with ChangeNotifier {
       {@required this.name,
       @required this.cover,
       @required this.author,
+      @required this.publishDate,
+      @required this.bookCategoryUid,
+      @required this.bookCategory,
       @required this.publisherUid,
       @required this.publisher,
       @required this.uid});
@@ -28,17 +33,26 @@ class Book with ChangeNotifier {
         name: reqMap["name"],
         cover: reqMap["cover"],
         author: reqMap["author"],
+        publishDate: reqMap["publishDate"].toDate(),
         publisherUid: reqMap["publisher"],
         publisher: Publisher.withEmptyValues(),
+        bookCategoryUid: reqMap["bookCategory"],
+        bookCategory: BookCategory.withEmptyValues(),
         uid: uid);
+  }
+  String get publishDateText{
+    return "${this.publishDate.day}.${this.publishDate.month} ";
   }
   factory Book.withEmptyValues() {
     return Book(
         name: "",
         cover: "",
         author: "",
+        publishDate: DateTime(2019),
         publisherUid: "",
         publisher: Publisher.withEmptyValues(),
+        bookCategoryUid: "",
+        bookCategory: BookCategory.withEmptyValues(),
         uid: "");
   }
   /* getPublisherDetails() async {

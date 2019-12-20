@@ -22,6 +22,8 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
 
     final books = Provider.of<Books>(context);
     books.getPublisherDetails(uid: widget.selectedBook.publisherUid,source: widget.source);
+    books.getBookCategoryDetails(uid: widget.selectedBook.bookCategoryUid,source: widget.source);
+  
     Book curBook;
     switch (widget.source) {
       case "home":
@@ -79,7 +81,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
             Container(
               padding: EdgeInsets.all(7),
               child: Text(
-                "Sayfa Sayısı: ",
+                "Kategori: "+curBook.bookCategory.label,
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 16, color: Colors.grey.shade800),
               ),
@@ -87,7 +89,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
             Container(
               margin: EdgeInsets.all(10),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(25),
+               // borderRadius: BorderRadius.circular(25),
                 child: Container(
                   // height: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(

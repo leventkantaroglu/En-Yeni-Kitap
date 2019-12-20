@@ -11,21 +11,28 @@ import 'models/member.dart';
 class PublisherDetails extends StatefulWidget {
   final Publisher selectedPublisher;
   final String source;
-  PublisherDetails(this.selectedPublisher,{@required this.source});
+  PublisherDetails(this.selectedPublisher, {@required this.source});
   @override
   _PublisherDetailsState createState() => _PublisherDetailsState();
 }
 
 class _PublisherDetailsState extends State<PublisherDetails> {
   // variables
-  
-  
+  List<Book> curBooks = [];
+
+  // functions
+  getBooksOfPublisher() async {
+    curBooks =
+        await Books.getBooksByType(widget.source, widget.selectedPublisher.uid);
+    setState(() {});
+  }
 
   // init
   @override
   void initState() {
     super.initState();
-    //getBooksOfPublisher();
+
+    getBooksOfPublisher();
   }
 
   // build
@@ -35,8 +42,9 @@ class _PublisherDetailsState extends State<PublisherDetails> {
         .beingFollowed(widget.selectedPublisher.uid, type: "publisher");
     final logined = Provider.of<MemberRepo>(context).logined;
     // -> books
-    final books = Provider.of<Books>(context);
+    /* final books = Provider.of<Books>(context);
     books.getBooksByType("publisher", widget.selectedPublisher.uid);
+     */
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -95,10 +103,10 @@ class _PublisherDetailsState extends State<PublisherDetails> {
               scrollDirection: Axis.horizontal,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   childAspectRatio: 1.5, crossAxisCount: 1),
-              itemCount: books.publisherBooks.length,
+              itemCount: curBooks.length,
               itemBuilder: (context, index) {
                 return BookWidget(
-                  books.publisherBooks[index],
+                  curBooks[index],
                   showCategoryLabel: true,
                   showDateLabel: false,
                   source: widget.source,

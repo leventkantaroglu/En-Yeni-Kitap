@@ -1,4 +1,5 @@
 import 'package:enyenikitap/models/book.dart';
+import 'package:enyenikitap/models/bookCategories.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:enyenikitap/bookWidget.dart';
@@ -42,7 +43,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
   @override
   void initState() {
     super.initState();
-    //getHomeBooks();
+    getHomeBooks();
     //fcm
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -112,15 +113,19 @@ class _HomeTabPageState extends State<HomeTabPage> {
   }
 
 // variables
-  /* Firestore _firestore = Firestore.instance;
-  List<Book> books = []; */
+  List<Book> curBooks = [];
   // functions
+  getHomeBooks() async {
+    curBooks = await Books.getHomeBooks(20);
+    setState(() {});
+  }
+  // build
 
   @override
   Widget build(BuildContext context) {
     // home -> books
-    final books = Provider.of<Books>(context);
-    books.getHomeBooks(20);
+    //final books = Provider.of<Books>(context);
+    //books.getHomeBooks(20);
     // home -> publishers
     final publishers = Provider.of<Publishers>(context).list;
 
@@ -128,8 +133,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
       body: Container(
         child: Column(
           children: <Widget>[
-            homePageSection(
-                title: "Yeni Çıkan Kitaplar", books: books.homePageBooks),
+            homePageSection(title: "Yeni Çıkan Kitaplar", books: curBooks),
             Container(
               height: 95,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -151,7 +155,6 @@ class _HomeTabPageState extends State<HomeTabPage> {
   }
 
   Widget homePageSection({title, List<Book> books}) {
-    
     String sectionTitle = title ?? appName;
     return Expanded(
       flex: 1,
@@ -187,6 +190,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
                     crossAxisCount: 1, childAspectRatio: 1.5),
                 itemCount: books.length,
                 itemBuilder: (context, index) {
+                 // print("b " + books[index].bookCategoryUid.toString());
                   return BookWidget(
                     books[index],
                     showCategoryLabel: true,

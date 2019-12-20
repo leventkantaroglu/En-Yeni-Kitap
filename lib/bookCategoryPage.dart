@@ -17,30 +17,20 @@ class BookCategoryPage extends StatefulWidget {
 }
 
 class _BookCategoryPageState extends State<BookCategoryPage> {
-  /* // variables
-  Firestore _firestore = Firestore.instance;
+  // variables
   List<Book> curBooks = [];
   // functions
   void getBooksOfCategory() async {
-    var snapshots = await _firestore
-        .collection("books")
-        .where("bookCategory", isEqualTo: widget.selectedCategory.uid)
-        .getDocuments();
-    if (snapshots != null) {
-      snapshots.documents.forEach((snapshot) {
-        Book curBook = Book.fromDataSource(snapshot.data, snapshot.documentID);
-        setState(() {
-          curBooks.add(curBook);
-        });
-      });
-    }
-  } */
+    curBooks =
+        await Books.getBooksByType("bookCategory", widget.selectedCategory.uid);
+    setState(() {});
+  }
 
   // init
   @override
   void initState() {
     super.initState();
-    //getBooksOfCategory();
+    getBooksOfCategory();
   }
 
   // build
@@ -49,9 +39,9 @@ class _BookCategoryPageState extends State<BookCategoryPage> {
     final beingFollowed = Provider.of<MemberRepo>(context)
         .beingFollowed(widget.selectedCategory.uid, type: "bookCategory");
     final logined = Provider.of<MemberRepo>(context).logined;
-  // -> books
-    final books = Provider.of<Books>(context);
-    books.getBooksByType("bookCategory", widget.selectedCategory.uid);
+    // -> books
+    //final books = Provider.of<Books>(context);
+    //books.getBooksByType("bookCategory", widget.selectedCategory.uid);
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -92,10 +82,10 @@ class _BookCategoryPageState extends State<BookCategoryPage> {
                 crossAxisCount: 4,
                 childAspectRatio: 0.7,
               ),
-              itemCount: books.bookCategoryBooks.length,
+              itemCount: curBooks.length,
               itemBuilder: (context, index) {
                 return BookWidget(
-                  books.bookCategoryBooks[index],
+                  curBooks[index],
                   showCategoryLabel: false,
                   showDateLabel: false,
                   source: "bookCategory",
